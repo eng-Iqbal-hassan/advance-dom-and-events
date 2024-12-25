@@ -226,3 +226,15 @@ setTimeout(()=>h1.removeEventListener('mouseenter', alertH1),3000)
 
 // So using setTimeOut we can also remove the eventListener 
 // the other way is to add the eventListener on html element which is written in html page
+
+// Lecture 9: Event propagation bubbling and capturing
+
+// Consider an anchor which is placed inside p tag which is inside section tag which is inside body tag
+// as there is no event listener defined by ourselves in the code but this event happens in the document level. Here its capturing phase start and this event start traveling down the track like document -> html -> body -> section -> p -> a
+// Here the target phase does start
+// After the target is completed the event moves moves back to the up like
+// a -> p -> section -> body -> html -> document . This phase is called bubbling phase
+// so if an event does happen in the section by us then js handle both one by the document and one by itself
+
+// The event can be handled in target and bubbling phase
+// This is called event is propagating from one place to the other place.
