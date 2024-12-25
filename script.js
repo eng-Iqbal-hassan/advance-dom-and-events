@@ -114,3 +114,82 @@ document.querySelector('.btn--close-cookie').addEventListener('click', function(
   // this thing can be done by DOM traversing whose syntax is given below 
   // message.parentElement.removeChild(message);
 })
+
+// lecture # 6: styles, attribute and classes
+// styles
+
+// to give the style to an element, use element.style.propertyName -> property name should be camel case
+message.style.background = '#37383d';
+// message.style.setProperty('background','#37383d')
+message.style.width = '120%'
+// the style we set over here is the inline style 
+console.log(message.style.background)  // #37383d
+// in console we get only inline style. Any style written in the CSS will not be get in the console by js.
+console.log(message.style.color) 
+// it will not give anything in the console. Although the style is present in the stylesheet but does not access in the console
+// To get the overall styles of an element use getComputedStyle 
+// console.log(getComputedStyle(message)) 
+// -> it is giving the overall style of an element. To get the single style we can put:
+console.log(getComputedStyle(message).color) 
+// rgb(187, 187, 187) is the color which we get in the console
+
+// other thing is that we set the css variable in :root in css file -> this thing is equivalent to the document in the Js. So any variable property can be changed in Js by the following way
+document.documentElement.style.setProperty('--color-primary', 'orangered')
+// So the primary color which was set in the CSS. It was green before but is changed to orangered now and is shown in the UI.
+// setProperty('background', '#000') in this way setProperty can be used to set styles
+
+// Attributes: src, alt, even the class and id are also the attribute of an element
+// we can access this attribute in the Js and change them 
+const logo = document.querySelector('.nav__logo');
+console.log('src',logo.src)
+// logo.alt = 'Beautiful minimalist logo'
+console.log('alt',logo.alt)
+console.log(logo.designer)
+console.log(logo.getAttribute('designer'))
+console.log(logo.setAttribute('company', 'bankist'))
+
+// Data Attributes 
+console.log(logo.dataset.versionNumber)
+
+// classes 
+logo.classList.add('c') // to add class
+logo.classList.remove('k') // to remove class
+logo.classList.toggle('j') // base on some condition this classList property is added
+console.log('contains',logo.classList.contains('n')) // it returns true if element contains class and false if not.
+
+// logo.className ='abc'  -> Never use this because it will remove all the classes and add only one class 
+
+// Lecture #7 : implementation of smooth scrolling
+
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1')
+
+// getBoundingClientRect() provides co-ordinates, width, height and many more properties about the element with with this method is attached.
+
+btnScrollTo.addEventListener('click', function(e){
+  console.log(e.target.getBoundingClientRect())
+  // it is being seen that top property of the element is relative to the height from top of view port. I clicked when this button is at the bottom it gives me large value i reload the page and scroll to top and then click the button again now this top value is less
+  const s1coords = section1.getBoundingClientRect();
+  // We can also get how much we scrolled on x-axis and y-axis
+  console.log('scroll X/Y axis', window.pageXOffset, window.pageYOffset)
+
+  // if we want to get the view port height and width in which a screen does exist, then this thing happens in this way
+  console.log('height/width viewport', document.documentElement.clientHeight, document.documentElement.clientWidth)
+  // window.scrollTo(s1coords.left, s1coords.top)  
+  // the solution is not right because it gives the value from top relative to the top-view and not relative to the sectios so it kept on changing so we will add pageYOffset in s1coords.top to get the complete height so our result will always be correct
+  // Also to add window.pageXOffset in the s1coords.left rather it is not required
+
+  // window.scrollTo(s1coords.left + window.pageXOffset, s1coords.top + window.pageYOffset);
+  // so the correct scroll result is that position from top + scroll from top then it will give the position of the second element from the start of page.
+
+  // Now the issue is resolved scrollTo method in Js provides us the scrolling of an element 
+  // To get the smooth scrolling we need to pass in the object to scrollTo method in the following way
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // })
+
+  // The more modern way is to use scrollIntoView function which requires no calculations like this
+  section1.scrollIntoView({behavior: 'smooth'})
+})
