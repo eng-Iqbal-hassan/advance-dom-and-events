@@ -37,10 +37,11 @@ document.addEventListener('keydown', function (e) {
 
 ///////////////////////////////////////
 
-// Lecture #7 : implementation of smooth scrolling
-
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1')
+const nav = document.querySelector('.nav')
+
+// Lecture #7 : implementation of smooth scrolling
 
 // getBoundingClientRect() provides co-ordinates, width, height and many more properties about the element with with this method is attached.
 
@@ -157,6 +158,37 @@ tabsContainer.addEventListener('click', function(e){
   document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active')
   
 
+})
+
+///////////////////////////////////////
+
+// Lecture 14 : Passing Arguments to event Handler
+
+// Requirement: When any of the element in header like li or button is hovered all other elements are fade out
+
+// opposite of mouseover is mouseout and opposite of mouseenter is mouseleave
+
+const handleHover = function (e, opacity) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link')
+    const logo = link.closest('.nav').querySelector('img')
+    
+    siblings.forEach(el => {
+     if (el !== link) { 
+      el.style.opacity = opacity
+     }
+    })
+    logo.style.opacity = opacity
+  }
+}
+ 
+nav.addEventListener('mouseover', function(e){
+ handleHover(e, 0.5)
+})
+
+nav.addEventListener('mouseout', function(e){
+  handleHover(e, 1 )
 })
 
 ///////////////////////////////////////
@@ -382,9 +414,9 @@ console.log(h1.parentNode)
 // it has given me the parent node of the h1
 console.log(h1.parentElement)
 // it has given me the parent element of the h1
-h1.closest('.header').style.background = 'var(--gradient-secondary)'
+// h1.closest('.header').style.background = 'var(--gradient-secondary)'
 // it has find the element with class header which is closest to h1 and then apply the background on it. Might be there can be three element with class header. That element which is closest in DOM will get this style 
-h1.closest('h1').style.background = 'var(--gradient-primary)'
+// h1.closest('h1').style.background = 'var(--gradient-primary)'
 // As i have seen that closest to h1 is itself h1 so the background is given to this h1 element.
 // So this closest and querySelector do the same thing querySelector does for the child element and closest does for the parent element
 
