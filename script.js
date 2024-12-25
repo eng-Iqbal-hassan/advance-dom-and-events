@@ -120,6 +120,47 @@ document.querySelector('.nav__links').addEventListener('click', function(e) {
 
 ///////////////////////////////////////
 
+// Lecture 13 : Building tabbed components
+
+// Tabbed components
+
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container')
+const tabsContent = document.querySelectorAll('.operations__content')
+
+// Now we want to add the eventListener on each of the tab be like
+
+// tabs.forEach(t=>t.addEventListener('click',()=>console.log('tab')))
+
+// this thing will give the click but let say there are 100 tabs then it slow down the performance.
+// We will use event delegation for the eventListener
+
+tabsContainer.addEventListener('click', function(e){
+  const clicked = e.target.closest('.operations__tab');
+  console.log(clicked)
+  // in this way, By using closest each time one click rather it is click on the button or span, it always point to that button
+
+  // Guard clause
+  if (!clicked) return;
+
+  // Remove the active class from all other elements before adding to the clicked element
+
+  tabs.forEach(t => t.classList.remove('operations__tab--active'))
+  clicked.classList.add('operations__tab--active')
+
+  // Remove the active class from each content element before adding to the specific content
+
+  tabsContent.forEach(c => c.classList.remove('operations__content--active') )
+
+  // Activate content area
+
+  document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active')
+  
+
+})
+
+///////////////////////////////////////
+
 
 // Lecture 5 : 
 // DOM is the interface between Js and browser.
