@@ -35,6 +35,93 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+///////////////////////////////////////
+
+// Lecture #7 : implementation of smooth scrolling
+
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1')
+
+// getBoundingClientRect() provides co-ordinates, width, height and many more properties about the element with with this method is attached.
+
+btnScrollTo.addEventListener('click', function(e){
+  console.log(e.target.getBoundingClientRect())
+  // it is being seen that top property of the element is relative to the height from top of view port. I clicked when this button is at the bottom it gives me large value i reload the page and scroll to top and then click the button again now this top value is less
+  const s1coords = section1.getBoundingClientRect();
+  // We can also get how much we scrolled on x-axis and y-axis
+  console.log('scroll X/Y axis', window.pageXOffset, window.pageYOffset)
+
+  // if we want to get the view port height and width in which a screen does exist, then this thing happens in this way
+  console.log('height/width viewport', document.documentElement.clientHeight, document.documentElement.clientWidth)
+  // window.scrollTo(s1coords.left, s1coords.top)  
+  // the solution is not right because it gives the value from top relative to the top-view and not relative to the sectios so it kept on changing so we will add pageYOffset in s1coords.top to get the complete height so our result will always be correct
+  // Also to add window.pageXOffset in the s1coords.left rather it is not required
+
+  // window.scrollTo(s1coords.left + window.pageXOffset, s1coords.top + window.pageYOffset);
+  // so the correct scroll result is that position from top + scroll from top then it will give the position of the second element from the start of page.
+
+  // Now the issue is resolved scrollTo method in Js provides us the scrolling of an element 
+  // To get the smooth scrolling we need to pass in the object to scrollTo method in the following way
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // })
+
+  // The more modern way is to use scrollIntoView function which requires no calculations like this
+  section1.scrollIntoView({behavior: 'smooth'})
+})
+
+///////////////////////////////////////
+
+// Lecture 11 : Event Delegation
+
+// So when we click on any of the link in header it will be smoothly scroll to there corresponding sections
+
+
+/*
+document.querySelectorAll('.nav__link').forEach(function(el){
+  el.addEventListener('click', function(e) {
+    e.preventDefault();
+    // So we have call back inside call back. e.preventDefault() stops the default behavior of the movement to see the respective at the top of the screen when we click on the anchor tag
+    const id = this.getAttribute('href')
+    // Here we get its respective section on each click of href.
+    console.log(id)
+    document.querySelector(id).scrollIntoView({behavior: 'smooth'})
+  })
+})
+*/
+
+// So the thing is done we have smoothly scroll to the respective section by the method above but we have applied the same event handler on three li elements Let say there are 10 li's and we are applying the same event handler 10 times. This will cause the performance issues.
+
+// this thing is resolved by using the event delegation which will do this thing by bubbling
+// It happens in two steps
+// 1: Add event listener to the common parent element
+// 2: Determine which element is originating the event.
+
+document.querySelector('.nav__links').addEventListener('click', function(e) {
+  e.preventDefault()
+  // console.log(e.target)
+  // So e.target in the console is showing is that from where this event does happens.
+  // when i click on the first anchor in console i get its element
+  // when i click on the second anchor, console gives its element
+  // when i click between first and second element then in console i get that event is originated from parent element
+  // It is very important thing that we want to deal with the events which are originated from the anchor
+  // so we need to apply the matching strategy
+  if(e.target.classList.contains('nav__link')) {
+    console.log('link')
+    console.log(e.target)
+    // So in the console i get the link printed whenever i click on the link only 
+    const id = e.target .getAttribute('href')
+    console.log(id)
+    document.querySelector(id).scrollIntoView({behavior: 'smooth'})
+  }
+})
+
+///////////////////////////////////////
+
+
+// Lecture 5 : 
 // DOM is the interface between Js and browser.
 // addEventListener is used to listen different types of event for an element like click, hover etc.
 
@@ -115,6 +202,8 @@ document.querySelector('.btn--close-cookie').addEventListener('click', function(
   // message.parentElement.removeChild(message);
 })
 
+///////////////////////////////////////
+
 // lecture # 6: styles, attribute and classes
 // styles
 
@@ -159,40 +248,7 @@ console.log('contains',logo.classList.contains('n')) // it returns true if eleme
 
 // logo.className ='abc'  -> Never use this because it will remove all the classes and add only one class 
 
-// Lecture #7 : implementation of smooth scrolling
-
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1')
-
-// getBoundingClientRect() provides co-ordinates, width, height and many more properties about the element with with this method is attached.
-
-btnScrollTo.addEventListener('click', function(e){
-  console.log(e.target.getBoundingClientRect())
-  // it is being seen that top property of the element is relative to the height from top of view port. I clicked when this button is at the bottom it gives me large value i reload the page and scroll to top and then click the button again now this top value is less
-  const s1coords = section1.getBoundingClientRect();
-  // We can also get how much we scrolled on x-axis and y-axis
-  console.log('scroll X/Y axis', window.pageXOffset, window.pageYOffset)
-
-  // if we want to get the view port height and width in which a screen does exist, then this thing happens in this way
-  console.log('height/width viewport', document.documentElement.clientHeight, document.documentElement.clientWidth)
-  // window.scrollTo(s1coords.left, s1coords.top)  
-  // the solution is not right because it gives the value from top relative to the top-view and not relative to the sectios so it kept on changing so we will add pageYOffset in s1coords.top to get the complete height so our result will always be correct
-  // Also to add window.pageXOffset in the s1coords.left rather it is not required
-
-  // window.scrollTo(s1coords.left + window.pageXOffset, s1coords.top + window.pageYOffset);
-  // so the correct scroll result is that position from top + scroll from top then it will give the position of the second element from the start of page.
-
-  // Now the issue is resolved scrollTo method in Js provides us the scrolling of an element 
-  // To get the smooth scrolling we need to pass in the object to scrollTo method in the following way
-  // window.scrollTo({
-  //   left: s1coords.left + window.pageXOffset,
-  //   top: s1coords.top + window.pageYOffset,
-  //   behavior: 'smooth',
-  // })
-
-  // The more modern way is to use scrollIntoView function which requires no calculations like this
-  section1.scrollIntoView({behavior: 'smooth'})
-})
+///////////////////////////////////////
 
 // lecture: 8 -> Types of event and event handler
 // event is the signal which is generated by DOM node and signal means that something has happened.
@@ -227,6 +283,8 @@ setTimeout(()=>h1.removeEventListener('mouseenter', alertH1),3000)
 // So using setTimeOut we can also remove the eventListener 
 // the other way is to add the eventListener on html element which is written in html page
 
+///////////////////////////////////////
+
 // Lecture 9: Event propagation bubbling and capturing
 
 // Consider an anchor which is placed inside p tag which is inside section tag which is inside body tag
@@ -238,6 +296,8 @@ setTimeout(()=>h1.removeEventListener('mouseenter', alertH1),3000)
 
 // The event can be handled in target and bubbling phase
 // This is called event is propagating from one place to the other place.
+
+///////////////////////////////////////
 
 // Lecture 10 : Event Propagation in practice
 
@@ -256,3 +316,5 @@ console.log(randomColor())
 // Also e.currentTarget === this -> true
 // the third argument can be passed to the eventListener to be true then it will start getting the eventListener in capturing phase and target phase while with false the events are captured in the target phase and bubbling phase.  
 // So set the third argument false or not setting anything any third argument are doing the same thing.
+
+
