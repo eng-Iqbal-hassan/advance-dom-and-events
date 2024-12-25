@@ -317,4 +317,55 @@ console.log(randomColor())
 // the third argument can be passed to the eventListener to be true then it will start getting the eventListener in capturing phase and target phase while with false the events are captured in the target phase and bubbling phase.  
 // So set the third argument false or not setting anything any third argument are doing the same thing.
 
+///////////////////////////////////////
+
+// Lecture 12: DOM Traversing: it is walking through the DOM, it means we can select one element on the base of other element.
+// sometime we need to check the directChild or directParent element on the run time and we even do not know the DOM structure at that time . So in this case DOM traversing will be helpful
+
+// const h1 = document.querySelector('h1'); declared at the top
+
+// Going downwards : child
+
+console.log(h1.querySelectorAll('.highlight'))
+// it has given the element inside h1 who has className highlight
+console.log(h1.childNodes)
+// it has given everything in the console which h1 contains also comments, text and HTML elements
+console.log(h1.children)
+// it has given HTML elements which are inside h1
+h1.firstElementChild.style.color = 'white'
+h1.lastElementChild.style.color = 'orangered'
+// So firstElementChild is for the first html element inside h1 and lastChildElement is for last HTML element inside h1. Here , it is shown that the elements getting from Traversing can be modified using it.
+
+// Going upward parent
+console.log(h1.parentNode)
+// it has given me the parent node of the h1
+console.log(h1.parentElement)
+// it has given me the parent element of the h1
+h1.closest('.header').style.background = 'var(--gradient-secondary)'
+// it has find the element with class header which is closest to h1 and then apply the background on it. Might be there can be three element with class header. That element which is closest in DOM will get this style 
+h1.closest('h1').style.background = 'var(--gradient-primary)'
+// As i have seen that closest to h1 is itself h1 so the background is given to this h1 element.
+// So this closest and querySelector do the same thing querySelector does for the child element and closest does for the parent element
+
+// Going sideways : siblings
+
+console.log(h1.previousElementSibling)
+console.log(h1.nextElementSibling)
+// it will give the direct sibling elements before and after the h1 as there is no element before h1 so it returns null and there is h4 after h1 so nextElementSibling gives the h4
+
+// There is one way of getting all the sibling elements is to move up the parent element and then get all the siblings by children
+console.log(h1.parentElement.children) 
+// So in console we have h1, h4, img, button as html elements
+
+// Have small exercise -> selecting one element apply property to all other element
+// [...h1.parentElement.children].forEach(function(el){
+//   if(el !== h1) {
+//     el.style.transform = 'scale(0.5)'
+//   }
+// }) 
+// From here the html collection is converting to array and style is applied to all of the elements except h1
+
+
+///////////////////////////////////////
+
 
