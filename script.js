@@ -168,31 +168,127 @@ tabsContainer.addEventListener('click', function(e){
 
 // opposite of mouseover is mouseout and opposite of mouseenter is mouseleave
 
-const handleHover = function (e, opacity) {
-  if (e.target.classList.contains('nav__link')) {
-    const link = e.target
-    const siblings = link.closest('.nav').querySelectorAll('.nav__link')
-    const logo = link.closest('.nav').querySelector('img')
+// const handleHover = function (e, opacity) {
+//   if (e.target.classList.contains('nav__link')) {
+//     const link = e.target
+//     const siblings = link.closest('.nav').querySelectorAll('.nav__link')
+//     const logo = link.closest('.nav').querySelector('img')
     
-    siblings.forEach(el => {
-     if (el !== link) { 
-      el.style.opacity = opacity
-     }
-    })
-    logo.style.opacity = opacity
-  }
-}
+//     siblings.forEach(el => {
+//      if (el !== link) { 
+//       el.style.opacity = opacity
+//      }
+//     })
+//     logo.style.opacity = opacity
+//   }
+// }
  
-nav.addEventListener('mouseover', function(e){
- handleHover(e, 0.5)
-})
+// nav.addEventListener('mouseover', function(e){
+//  handleHover(e, 0.5)
+// })
 
-nav.addEventListener('mouseout', function(e){
-  handleHover(e, 1 )
-})
+// nav.addEventListener('mouseout', function(e){
+//   handleHover(e, 1 )
+// })
 
 ///////////////////////////////////////
 
+// Lecture 15: Implementing sticky navigation to scroll
+
+// We have to add the sticky class as soon as the first section appears at the top of screen
+// getBoundingClientRect will help us in this regard
+
+
+
+// const initialCoord = section1.getBoundingClientRect()
+
+// window.addEventListener('scroll', function() {
+//   if (window.scrollY > initialCoord.top) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky')
+// })
+
+// this thing is done and we have made the header sticky when the first section does appear but it is not a good approach to use because due to scroll event keeps firing for the smallest change
+
+// A better way is the use of observer intersection API's
+
+///////////////////////////////////////
+
+// Lecture 16 : Observer Intersection API's :-
+
+// this API allows our code to observe changes to the way a certain element intersect with other element or the way it intersect with the view port
+
+// We have to observe when header is going out of the view of the screen then we will apply the header sticky
+
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+
+const stickyNav = function(entries) {
+  const [entry] = entries;
+  console.log(entry);
+  // It is being observed that when the header is out of the view completely then isIntersecting value is false and when isIntersecting value is true then header is in the view port completely or partially. This property will be used to add the class sticky to the header
+  if (!entry.isIntersecting) nav.classList.add('sticky')
+  else nav.classList.remove('sticky')
+}
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+headerObserver.observe(header)
+
+///////////////////////////////////////
+
+// Lecture 17 : Revealing sections while scrolling -> Again the use case of intersectionObserver API
+
+const allSections = document.querySelectorAll('.section');
+
+const revealSections = function(entries,observer) {
+  const [entry] = entries;
+
+  // Guard clause
+  if(!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden')
+  observer.unobserve(entry.target);
+}
+
+const sectionObserver = new IntersectionObserver(revealSections,{
+  root: null,
+  threshold: 0.15
+})
+
+allSections.forEach(function(section) {
+  sectionObserver.observe(section)
+  section.classList.add('section--hidden')
+})
+///////////////////////////////////////
+
+// Lecture 18: Lazy loading images
+// One more time we need intersectionObserver API.
+
+const imageTarget = document.querySelectorAll('img[data-src]')
+
+const loadImg = function(entries,observer) {
+  const [entry] = entries
+
+  // Guard clause
+  if(!entry.isIntersecting) return;
+  entry.target.src = entry.target.dataset.src
+  entry.target.addEventListener('load', function(){
+    entry.target.classList.remove('lazy-img')
+  })
+  observer.unobserve(entry.target);
+}
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px',
+})
+
+imageTarget.forEach(img=>imgObserver.observe(img ))
+
+///////////////////////////////////////
 
 // Lecture 5 : 
 // DOM is the interface between Js and browser.
@@ -206,9 +302,9 @@ console.log(document.documentElement);
 console.log(document.head);
 console.log(document.body);
 // we need not for the querySelector for head and body. We use querySelect to select a single DOM node and querySelectorAll for multiple nodes.
-const header = document.querySelector('.header')
+// const header = document.querySelector('.header')
 // As we have multiple node of the class section
-const allSections = document.querySelectorAll('.section');  
+// const allSections = document.querySelectorAll('.section');  
 console.log('sections',allSections);
 
 
@@ -330,10 +426,10 @@ console.log('contains',logo.classList.contains('n')) // it returns true if eleme
 // the most important events are mouse events and keyboard events. 
 
 const h1 = document.querySelector('h1');
-const alertH1 = function(){
-  alert('Great! You are reading the heading h1 :D')
-  // h1.removeEventListener('mouseenter', alertH1)
-} 
+// const alertH1 = function(){
+//   alert('Great! You are reading the heading h1 :D')
+//   h1.removeEventListener('mouseenter', alertH1)
+// } 
 // h1.addEventListener('mouseenter', function(){
 //   alert('Great! You are reading the heading h1 :D')
 // })
