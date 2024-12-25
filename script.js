@@ -238,3 +238,21 @@ setTimeout(()=>h1.removeEventListener('mouseenter', alertH1),3000)
 
 // The event can be handled in target and bubbling phase
 // This is called event is propagating from one place to the other place.
+
+// Lecture 10 : Event Propagation in practice
+
+// How can we get the random color
+
+const randomInt = (min,max) => Math.floor(Math.random()*(max-min+1)+min)
+const randomColor = ()=> `rgb(${randomInt(0,225)},${randomInt(0,225)},${randomInt(0,225)})`
+console.log(randomColor())
+
+// By this way we can get the random number 
+
+// Event Propagation is simple we have nav , ul and li the events are attached to the nav, ul and li which is that changing the background when click does happen it has been observed that when we click on li ul and nav also get the  background color due to bubbling . Similarly clicking the ul gives the background to nav due to bubbling. So an event gets the listener due to target and bubbling. 
+
+// .addEventListener has click and function 
+// in event listener the this keyword is pointing to the element with which the event Listener is attached 
+// Also e.currentTarget === this -> true
+// the third argument can be passed to the eventListener to be true then it will start getting the eventListener in capturing phase and target phase while with false the events are captured in the target phase and bubbling phase.  
+// So set the third argument false or not setting anything any third argument are doing the same thing.
