@@ -259,7 +259,7 @@ const sectionObserver = new IntersectionObserver(revealSections,{
 
 allSections.forEach(function(section) {
   sectionObserver.observe(section)
-  section.classList.add('section--hidden')
+  // section.classList.add('section--hidden')
 })
 ///////////////////////////////////////
 
@@ -287,6 +287,44 @@ const imgObserver = new IntersectionObserver(loadImg, {
 })
 
 imageTarget.forEach(img=>imgObserver.observe(img ))
+
+///////////////////////////////////////
+
+// Lecture 19, 20: Building slider
+
+const slides = document.querySelectorAll('.slide')
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+let curSlide = 0;
+const maxSlide = slides.length;
+
+const goToSlide = function (slide) {
+  slides.forEach((s,i)=> (s.style.transform = `translateX(${100*(i-slide)}%)`));
+}
+
+goToSlide(0);
+
+const nextSlide = function() {
+  if (curSlide === maxSlide -1  ) curSlide = 0;
+  else curSlide++;
+  goToSlide(curSlide)
+}
+
+const prevSlide = function() {
+  if (curSlide === 0  ) curSlide = maxSlide - 1;
+  else curSlide--;
+  goToSlide(curSlide)
+} 
+
+btnRight.addEventListener('click', nextSlide)
+btnLeft.addEventListener('click', prevSlide)
+
+// Now apply the slider movement with arrow left and arrow right keys
+
+document.addEventListener('keydown',function(e){
+  if (e.key === 'ArrowLeft') prevSlide()
+  e.key === 'ArrowRight' && nextSlide()
+})
 
 ///////////////////////////////////////
 
