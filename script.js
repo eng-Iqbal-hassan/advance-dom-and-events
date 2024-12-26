@@ -43,7 +43,7 @@ const nav = document.querySelector('.nav')
 
 // Lecture #7 : implementation of smooth scrolling
 
-// getBoundingClientRect() provides co-ordinates, width, height and many more properties about the element with with this method is attached.
+// getBoundingClientRect() provides co-ordinates, width, height and many more properties about the element with which this method is attached.
 
 btnScrollTo.addEventListener('click', function(e){
   console.log(e.target.getBoundingClientRect())
@@ -113,7 +113,7 @@ document.querySelector('.nav__links').addEventListener('click', function(e) {
     console.log('link')
     console.log(e.target)
     // So in the console i get the link printed whenever i click on the link only 
-    const id = e.target .getAttribute('href')
+    const id = e.target.getAttribute('href')
     console.log(id)
     document.querySelector(id).scrollIntoView({behavior: 'smooth'})
   }
@@ -604,7 +604,7 @@ window.addEventListener('load', function(){
 
 ///////////////////////////////////////
 
-// Lecture 12: Defer and async script loading
+// Lecture 22: Defer and async script loading
 
 // Script can be passed in the header or at the end of the body tag
 
