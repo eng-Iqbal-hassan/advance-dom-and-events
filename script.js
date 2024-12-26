@@ -575,4 +575,59 @@ console.log(h1.parentElement.children)
 
 ///////////////////////////////////////
 
+// Lecture 21: Life cycle DOM
+// Life cycle means that the time when the page is accessed to the time when user leaves it.
+// (1): The DOMContentLoaded event fires when the HTML document has been completely parsed, and all deferred scripts (<script defer src="…"> and <script type="module">) have downloaded and executed.
+//  It doesn't wait for other things like images, subframes, and async scripts to finish loading.
+// The functionality is written in such a way that
+document.addEventListener('DOMContentLoaded', function(e){
+  console.log('HTML is parsed and DOM tree is built!',e)
+})
+// This piece of code will be executed when complete Js is available. We do not need to execute this kind of stuff as we added js at the last and it is available right after the HTML is available
+
+// document.ready in jquery is equavilant to the DOMContentLoaded in vanilla js
+// But no such things are necessary
+
+// (2): The second event which is fired by the window which is load and this event does fire when not only HTML, but all the external sources and images are loaded
+
+window.addEventListener('load', function(){
+  console.log('the page is completely loaded')
+})
+
+// (3): the other event which is fired by the window is before when we leave the page and it is beforeunload event.
+
+// window.addEventListener('beforeunload', function(e){
+//   e.preventDefault();
+//   console.log(e);
+//   e.returnValue='';
+// })
+
+///////////////////////////////////////
+
+// Lecture 12: Defer and async script loading
+
+// Script can be passed in the header or at the end of the body tag
+
+// (1): Regular Script: passed at the top script is executed first. HTML starts parsing and making the DOM tree while it sees its script so it started applying scripts. Then, browser does stop and start waiting for HTML to come up. This thing is not suitable. The correct way is that regular script is added at the bottom of the body tag and when the complete HTML is parsed then the script is applied on its respective elements.
+// Regular script use case is when we need to support old browsers 
+
+// The other thing that script can be given the defer or async attribute as well
+
+// (2): async in head: Scripts are fetched asynchronously and executed immediately
+
+// usually the DOMContentLoaded event does wait for execution of all scripts and not the asynchronous script.
+
+// Scripts are not guaranteed to load in the order
+
+// Use for third party libraries when order does not matter (like: Google Analytics
+
+// (3): Differ in the head: Scripts are fetched asynchronously(side by side the HTML is parsed) and executed after the HTML is completely parsed
+
+// DOMContentLoaded event fires after the execution of differ scripts
+
+// Scripts are executed in order
+
+// This is the overall best solution and use it for your own scripts and when the order does matter (eg: including a library)
+
+///////////////////////////////////////
 
