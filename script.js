@@ -5,6 +5,7 @@
 
 // Module 14: 
 // Lecture 9:   Coding challenge
+// OOP using constructor function and using new key word
 
 const Car = function (make,speed) {
   this.make = make,
@@ -28,6 +29,51 @@ bmw.accelerate(); // BMW is going at 130km/h
 bmw.accelerate(); // BMW is going at 140km/h
 bmw.break();      // BMW is going at 135km/h
 bmw.accelerate(); // BMW is going at 145km/h
+
+///////////////////////////////////////
+
+// Lecture 10: ES6 classes
+
+// So one can do OOP USING ES6 classes, which syntactic sugars and behind the scene these are constructor functions
+
+// class expression
+// const PersonCl = Class {}
+
+// Class declaration
+
+class PersonCl {
+  constructor(firstName,birthYear) {
+    this.firstName= firstName,
+    this.birthYear= birthYear
+  }
+
+  // Methods are added outside the constructor but inside the class 
+  calcAge() {
+    console.log(2037-this.birthYear)
+  }
+}
+
+const jessica = new PersonCl('Jessica', 2015);
+console.log(jessica)
+console.log(jessica.__proto__===PersonCl.prototype) // true
+jessica.calcAge()
+// the clg return the object in similar way as that in case of constructor functions
+
+// Here classes are special type of functions in Js
+// in this class the first thing we need to add is the constructor method. This constructor method will work same like the way constructor function does.
+// But this is the method of class and it should be called the method and this is the rule
+
+// In class it is seen that methods are inside class but it is outside the constructor
+// The methods can be added outside as well
+PersonCl.prototype.greet = function () {
+  console.log(`hey ${this.firstName}`)
+}
+jessica.greet();
+// So it gives us that class has same prototype nature as that of constructor function
+
+// classes are not hoisted
+// classes are first class citizens
+// classes are executed in strict mode
 
 ///////////////////////////////////////
 
