@@ -42,21 +42,64 @@ bmw.accelerate(); // BMW is going at 145km/h
 // Class declaration
 
 class PersonCl {
-  constructor(firstName,birthYear) {
-    this.firstName= firstName,
+  constructor(fullName,birthYear) {
+    this.fullName= fullName,
     this.birthYear= birthYear
   }
 
+
+  // Instance methods
+  // Methods will be added to the prototype 
   // Methods are added outside the constructor but inside the class 
   calcAge() {
     console.log(2037-this.birthYear)
   }
+
+  get age() {
+    return 2037 - this.birthYear
+  }
+
+  static hey () {
+    console.log('hey there!')
+  }
+
+  // set a property that already exist
+
+//   set fullName(name) {
+//     console.log(name)
+//     if (name.includes(' ')) this.fullName = name;
+//     else alert(`${name} is not a full name`)
+//     // error occur which is maximum call stack is exceeded
+//   }
+// }
+
+set fullName(name) {
+  console.log(name)
+  if (name.includes(' ')) this._fullName = name;
+  else alert(`${name} is not a full name`)
 }
 
-const jessica = new PersonCl('Jessica', 2015);
-console.log(jessica)
+get fullName() {
+  return this._fullName
+}
+
+// static methods
+static hey() {
+  console.log('hey there')
+  console.log(this)
+}
+}
+
+// So the error is resolved using _(under-score) which is just a naming convention
+// now in jassica the fullName is undefine and _fullName has the name
+// in order to set fullName equal to _fullName, we will get it
+
+PersonCl.hey()
+const jessica = new PersonCl('Jessica Davis', 2015);
+console.log('Jessica',jessica)
 console.log(jessica.__proto__===PersonCl.prototype) // true
 jessica.calcAge()
+console.log('Age',jessica.age)
 // the clg return the object in similar way as that in case of constructor functions
 
 // Here classes are special type of functions in Js
@@ -68,12 +111,95 @@ jessica.calcAge()
 PersonCl.prototype.greet = function () {
   console.log(`hey ${this.firstName}`)
 }
-jessica.greet();
+// jessica.greet();
 // So it gives us that class has same prototype nature as that of constructor function
 
 // classes are not hoisted
 // classes are first class citizens
 // classes are executed in strict mode
+
+///////////////////////////////////////
+
+// Lecture 15: Inheritance between classes constructor function
+
+// lets take a constructor function for Person
+
+const Person = function(firstName,birthYear) {
+  this.firstName = firstName,
+  this.birthYear = birthYear
+}
+
+Person.prototype.calcAge= function() {
+  console.log(2037 - this.birthYear)
+}
+
+// Here is the constructor function from where any person object can be created
+
+// Now lets take a constructor function student be like
+
+// const Student = function(firstName,birthYear,course) {
+//   this.firstName = firstName,
+//   this.birthYear = birthYear,
+//   this.course = course
+// }
+
+
+// here the student constructor function is created which has exactly same this.firstName and this.birthYear as in Person constructor function.
+
+// this thing is avoided by calling the Person constructor function inside Student constructor function be like
+
+// const Student = function(firstName,birthYear,course) {
+//   Person(firstName,birthYear)
+//   this.course = course
+// }
+
+// but it is giving the error. The reason is that this is the regular function and in regular function, the this keyword sets to undefine
+
+// so this error is resolved by call method which sets the this keyword to the object which is getting this function afterward.
+
+const Student = function(firstName,birthYear,course) {
+  Person.call(this,firstName,birthYear)
+  this.course = course
+}
+
+// Linking prototype
+Student.prototype = Object.create(Person.prototype);
+//We have done this thing before adding any method to the student.prototype all because if we do it after the student.prototype then the any property set in student will be overwritten. 
+// Further we will not do
+// Student.prototype =Person.prototype
+// because if we do this then the student prototype and person prototype are same object which is bad rather we need that student prototype is identical but different object then the person object.
+
+Student.prototype.introduce = function() {
+  console.log(`My name is ${this.firstName} and I study ${this.course}`)
+}
+
+
+
+const mike = new Student('mike',2020,'Computer Science')
+mike.introduce()
+
+// So the student constructor function has its prototype in its proto there is Person.Prototype  which is connected to the prototype of person constructor function and all these things are available for mike object, all through the prototype chain.
+// this is how inheritance works between the classes
+
+mike.calcAge()
+// when this calcAge method is called then it does not find in mike object. It also does not find in its prototype then Js even looks it into its prototype chain, where it finds and then applied. That is the power of inheritance
+// Now the method which are defined in Person object is still applicable for student objects
+
+console.dir(Student.prototype.constructor) 
+// -> It should points back to the student but it is pointing to the Person which is not correct
+// This thing is because Student.prototype = Object.create(Person.prototype);
+// Sometime we rely on student constructor function, this thing is fixed nicely by the following way
+
+Student.prototype.constructor = Student;
+console.dir(Student.prototype.constructor) 
+// Now it is pointing to the student
+console.log(mike instanceof Student)
+console.log(mike instanceof Person)
+console.log(mike instanceof Object)
+
+// Note: When you have tow methods with the same name then Js use firstName of its prototype chain
+// So one method is written in the child class and one is written in the parent class with the same name. Then childClass overwrite the method of the parentClass.
+
 
 ///////////////////////////////////////
 
@@ -551,7 +677,7 @@ const h1 = document.querySelector('h1');
 // h1.addEventListener('mouseenter', function(){
 //   alert('Great! You are reading the heading h1 :D')
 // })
-h1.addEventListener('mouseenter', alertH1)
+// h1.addEventListener('mouseenter', alertH1)
 
 // the other way to get this mouseeneter event is onmouseenter property
 
@@ -565,7 +691,7 @@ h1.addEventListener('mouseenter', alertH1)
 // From MDN reference all ind of events can be explored 
 
 // we can remove the event 
-setTimeout(()=>h1.removeEventListener('mouseenter', alertH1),3000)
+// setTimeout(()=>h1.removeEventListener('mouseenter', alertH1),3000)
 
 // So using setTimeOut we can also remove the eventListener 
 // the other way is to add the eventListener on html element which is written in html page
@@ -652,7 +778,6 @@ console.log(h1.parentElement.children)
 // }) 
 // From here the html collection is converting to array and style is applied to all of the elements except h1
 
-
 ///////////////////////////////////////
 
 // Lecture 21: Life cycle DOM
@@ -710,3 +835,79 @@ window.addEventListener('load', function(){
 // This is the overall best solution and use it for your own scripts and when the order does matter (eg: including a library)
 
 ///////////////////////////////////////
+
+// Module 14
+// Lecture 19: Another class example
+
+// The things we discussed till now about object creation by different ways like constructor function, ES6 classes and Object.create will use in the bankist app as we were working in the previous module
+
+class Account {
+  constructor(owner, curreny, pin) {
+    this.owner = owner;
+    this.curreny = curreny;
+    this._pin = pin; 
+    this._movements = [];
+    this.locale = navigator.language;
+    // We can even write any piece of code over here
+    console.log(`thanks for opening account ${this.owner}`)
+    // So in the object jonas created below, the object receive the message of the opening the account in console 
+  }
+
+  getMovements(){
+    return this._movements;
+  }
+  // The methods discuss below are the interface to our projects
+  // Public interface
+  deposit(val) {
+    this._movements.push(val)
+  }
+  withdrawal(val) {
+    this.deposit(-val)
+    // As withdrawal method does exactly same way as deposit method so we have call one method inside the withdrawal method and we can do this in Js. The only difference is that we get the -ve result
+  }
+  _approveLoan(val) {
+    console.log('Request for loan is accepted')
+    return true
+  }
+  requestLoan(val) {
+    if(this._approveLoan) {
+      this.deposit(val)
+      console.log('Loan Approved')
+    }
+  }
+}
+// Here this.locale and this.movements show that we can set the property which are not based on the input
+
+// Now create the account using this ES6 class
+
+const acc1 = new Account('Jonas', 'EUR', 1111);
+// acc1.movements.push(250)
+// Deposit the amount
+// acc1.movements.push(-140)
+// Withdrawal the amount
+// with this property, we still get the movements array with two values. But it is not the good way to do this. Instead of getting this push property we can create the methods inside the ES6 classes which will do this thing   
+// this push method outside will now replace by the following way 
+acc1.deposit(250);
+acc1.withdrawal(140);
+acc1.requestLoan(1000)
+// Here we do not need to care about -ve sign. This thing is abstracted inside the method in class syntax.
+console.log(acc1)
+console.log(acc1.getMovements)
+
+acc1._approveLoan(1000)
+console.log(acc1._pin)
+// The things like approveLoan and acc1.pin should not be accessible outside the object due to security reasons but they are still accessible which are the points of concern and this thing should be resolved
+// Basically we need data privacy and data encapsulation.
+// Now the object acc1 is created
+
+// Lecture 20: Encapsulation Protected Properties and methods
+
+// Encapsulation means is to keep some properties and methods private so that they are not accessible outside the class
+// Rest of the methods are exposed as a public interface, which we can call an API.
+// there are two reason that we need data encapsulation
+// (1): To prevent the code outside the class to accidentally manipulate the data inside the class
+// (2): We do not want to manually mess with the properties so we encapsulated them like the push method is achieved using withdrawal and deposit methods which are inside the class 
+// One convention which is used is to use underscore before the name. It will not make it private and still can be access outside the class but following the convention by developer team. Now one in your team will manipulate this property. Like i have done for movements 
+// the other thing that developer can do is to make a method which is getMovements.
+// So they can access and they will, but no one will set its value to the other value in this way
+// With the same under-score way the pin property and approveLoan methods are protected.
