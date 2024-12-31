@@ -842,37 +842,51 @@ window.addEventListener('load', function(){
 // The things we discussed till now about object creation by different ways like constructor function, ES6 classes and Object.create will use in the bankist app as we were working in the previous module
 
 class Account {
+  // Public fields (instances)
+  locale = navigator.language
+  // Private fields
+  #movements = []
+  #pin;
+
   constructor(owner, curreny, pin) {
     this.owner = owner;
     this.curreny = curreny;
-    this._pin = pin; 
-    this._movements = [];
-    this.locale = navigator.language;
+    this.#pin = pin; 
+    // this._movements = [];
+    // this.locale = navigator.language;
     // We can even write any piece of code over here
     console.log(`thanks for opening account ${this.owner}`)
     // So in the object jonas created below, the object receive the message of the opening the account in console 
   }
 
   getMovements(){
-    return this._movements;
+    return this.#movements;
   }
+
+  // Public methods
   // The methods discuss below are the interface to our projects
   // Public interface
   deposit(val) {
-    this._movements.push(val)
+    this.#movements.push(val)
+    return this
   }
   withdrawal(val) {
     this.deposit(-val)
     // As withdrawal method does exactly same way as deposit method so we have call one method inside the withdrawal method and we can do this in Js. The only difference is that we get the -ve result
+    return this;
   }
   _approveLoan(val) {
     console.log('Request for loan is accepted')
     return true
   }
+
+  // private methods 
+  // #approveLoan the method start with # is a private method, But Js takes it as private field and they are not still accessible outside the class
   requestLoan(val) {
     if(this._approveLoan) {
       this.deposit(val)
       console.log('Loan Approved')
+      return this
     }
   }
 }
@@ -891,11 +905,18 @@ acc1.deposit(250);
 acc1.withdrawal(140);
 acc1.requestLoan(1000)
 // Here we do not need to care about -ve sign. This thing is abstracted inside the method in class syntax.
+acc1.deposit(200).withdrawal(100).deposit(500).requestLoan(25000).withdrawal(10000);
+// returning this in these methods becomes them chainable.
 console.log(acc1)
 console.log(acc1.getMovements)
+// console.log(acc1.#movements) 
+// The field is private and not accessible outside
+// Still the method getMovements is accessible which is coming from the private field but the private field is not accessible.
 
 acc1._approveLoan(1000)
-console.log(acc1._pin)
+// console.log(acc1._pin)
+// console.log(acc1.#pin)
+// Error of privacy does occur
 // The things like approveLoan and acc1.pin should not be accessible outside the object due to security reasons but they are still accessible which are the points of concern and this thing should be resolved
 // Basically we need data privacy and data encapsulation.
 // Now the object acc1 is created
